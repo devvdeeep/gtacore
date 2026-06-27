@@ -326,6 +326,59 @@
       object-fit: cover;
     }
 
+    /* Scroll Indicator Animation */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      z-index: 10;
+    }
+
+    .mouse-icon {
+      width: 30px;
+      height: 50px;
+      border: 2px solid rgba(255, 255, 255, 0.7);
+      border-radius: 15px;
+      position: relative;
+      animation: scroll-bounce 2s infinite;
+    }
+
+    .mouse-wheel {
+      width: 4px;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 2px;
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: scroll-wheel 1.5s infinite;
+    }
+
+    .scroll-text {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 600;
+      animation: scroll-bounce 2s infinite 0.2s backwards;
+    }
+
+    @keyframes scroll-bounce {
+      0%, 100% { opacity: 0.6; transform: translateY(0); }
+      50% { opacity: 1; transform: translateY(10px); }
+    }
+
+    @keyframes scroll-wheel {
+      0% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      100% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+    }
+
     @media (max-width: 900px) {
       .nav-links { display: none; }
       #hamburger { display: flex; }
@@ -2504,6 +2557,13 @@
     <video autoplay muted loop playsinline>
       <source src="hero.mp4" type="video/mp4" />
     </video>
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator">
+      <div class="mouse-icon">
+        <div class="mouse-wheel"></div>
+      </div>
+      <div class="scroll-text">Scroll</div>
+    </div>
   </section>
 
   <!-- ══════════════════════════════════════════════
