@@ -2930,20 +2930,28 @@
     navLinks.forEach(link => {
       link.addEventListener('click', function(e) {
         const href = this.getAttribute('href');
-        console.log('Link clicked:', href);
+        console.log('--- Link clicked:', href);
         
         if (!href || href === '#') return;
         const target = document.querySelector(href);
-        console.log('Target element found:', target);
         
         if (target) {
           e.preventDefault();
           const navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 80;
-          const targetTop = target.getBoundingClientRect().top + window.scrollY - navH;
-          console.log('Scrolling to:', { navH, targetTop, currentScroll: window.scrollY });
+          const rect = target.getBoundingClientRect();
+          const targetTop = rect.top + window.scrollY - navH;
+          
+          console.log('✓ Target found:', {
+            'Element': target.id,
+            'rect.top (from viewport)': rect.top,
+            'window.scrollY (current)': window.scrollY,
+            'navH': navH,
+            'SCROLL TO (calculated)': targetTop
+          });
+          
           window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
         } else {
-          console.log('Target not found for:', href);
+          console.log('✗ Target NOT found for:', href);
         }
       });
     });
