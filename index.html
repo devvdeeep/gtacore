@@ -2928,15 +2928,21 @@
     });
 
     // ── Smooth scroll for all nav anchor links ────────────────
-    document.querySelectorAll('.nav-links a[href^="#"], .mobile-links a[href^="#"], .nav-logo[href^="#"]').forEach(link => {
+    const navLinksToScroll = document.querySelectorAll('.nav-links a[href^="#"], .mobile-links a[href^="#"], .nav-logo[href^="#"]');
+    console.log('Scroll handler attaching to', navLinksToScroll.length, 'links');
+    
+    navLinksToScroll.forEach(link => {
       link.addEventListener('click', function(e) {
         const href = this.getAttribute('href');
+        console.log('CLICK:', href);
         if (!href || href === '#') return;
         const target = document.querySelector(href);
+        console.log('TARGET:', target);
         if (target) {
           e.preventDefault();
           const navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 80;
           const targetTop = target.getBoundingClientRect().top + window.scrollY - navH;
+          console.log('SCROLL TO:', targetTop);
           window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
         }
       });
