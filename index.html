@@ -2051,8 +2051,126 @@
     }
 
     /* ══════════════════════════════════════════════════════════
-       LATEST UPDATES SECTION
+       PRE-ORDER SECTION
     ══════════════════════════════════════════════════════════ */
+    .preorder-section {
+      width: 100%;
+      min-height: 500px;
+      background-image: url('preorder-bg.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .preorder-section::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1;
+    }
+
+    .preorder-content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 800px;
+      text-align: center;
+    }
+
+    .preorder-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .preorder-heading {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #fff;
+      background: linear-gradient(90deg, var(--pink), var(--cyan), var(--pink));
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradient-shift 3s ease infinite;
+    }
+
+    .preorder-subtext {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(14px, 2vw, 18px);
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      color: rgba(255, 255, 255, 0.7);
+      margin: 0;
+    }
+
+    .preorder-btn {
+      display: inline-block;
+      padding: 16px 48px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #000;
+      background: linear-gradient(90deg, var(--pink), var(--cyan));
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      box-shadow: 0 0 24px rgba(255, 45, 107, 0.4), 0 0 48px rgba(0, 229, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .preorder-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: rgba(255, 255, 255, 0.2);
+      transition: left 0.35s ease;
+    }
+
+    .preorder-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(255, 45, 107, 0.6), 0 0 64px rgba(0, 229, 255, 0.3);
+    }
+
+    .preorder-btn:hover::before {
+      left: 100%;
+    }
+
+    .preorder-note {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      margin: 0;
+    }
+
+    @keyframes gradient-shift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       LATEST UPDATES SECTION
+    ══════════════════════════════════════════════════════════ -->
     #latest-updates {
       min-height: 400px;
       width: 100%;
@@ -2858,7 +2976,20 @@
     </div>
   </section>
 
-  <div id="preorder" style="position:relative;top:calc(-1 * var(--nav-h));" aria-hidden="true"></div>
+  <!-- ══════════════════════════════════════════════
+       PRE-ORDER SECTION
+  ══════════════════════════════════════════════ -->
+  <section id="preorder" class="preorder-section">
+    <div class="preorder-content">
+      <div class="preorder-inner">
+        <h2 class="preorder-heading">ARE YOU READY?</h2>
+        <p class="preorder-subtext">Grand Theft Auto VI – on 19 November, 2026</p>
+        <a href="https://www.rockstargames.com/VI" target="_blank" class="preorder-btn">PRE-ORDER NOW</a>
+        <p class="preorder-note">Available on PlayStation 5 and Xbox Series X|S</p>
+      </div>
+    </div>
+  </section>
+
   <!-- ══════════════════════════════════════════════
        LATEST UPDATES SECTION
   ══════════════════════════════════════════════ -->
