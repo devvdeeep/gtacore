@@ -312,13 +312,13 @@
       --white: #0b0b0b;
     }
 
-    #hero {
+    #home {
       position: relative;
       width: 100%;
       height: 100vh;
     }
 
-    #hero video {
+    #home video {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -344,7 +344,7 @@
     /* ══════════════════════════════════════════════════════════
        COUNTDOWN SECTION
     ══════════════════════════════════════════════════════════ */
-    #countdown-section {
+    #latest-news {
       width: 100%;
       min-height: 50vh;
       background:
@@ -360,7 +360,7 @@
       overflow: hidden;
     }
 
-    #countdown-section::before {
+    #latest-news::before {
       content: '';
       position: absolute;
       top: 0; left: 10%; right: 10%;
@@ -414,9 +414,9 @@
       transition: opacity 0.7s ease 0.3s, transform 0.7s ease 0.3s;
     }
 
-    #countdown-section.visible .countdown-heading,
-    #countdown-section.visible .countdown-subtext,
-    #countdown-section.visible .countdown-cards {
+    #latest-news.visible .countdown-heading,
+    #latest-news.visible .countdown-subtext,
+    #latest-news.visible .countdown-cards {
       opacity: 1;
       transform: translateY(0);
     }
@@ -2500,8 +2500,7 @@
   <!-- ══════════════════════════════════════════════
        HERO
   ══════════════════════════════════════════════ -->
-  <div id="home" style="position:absolute;top:0;left:0;width:0;height:0;pointer-events:none;" aria-hidden="true"></div>
-  <section id="hero" data-home-anchor>
+  <section id="home" data-home-anchor>
     <video autoplay muted loop playsinline>
       <source src="hero.mp4" type="video/mp4" />
     </video>
@@ -2510,8 +2509,7 @@
   <!-- ══════════════════════════════════════════════
        COUNTDOWN SECTION
   ══════════════════════════════════════════════ -->
-  <div id="latest-news" style="position:relative;top:calc(-1 * var(--nav-h));" aria-hidden="true"></div>
-  <section id="countdown-section" data-latest-news-anchor aria-label="GTA VI Release Countdown">
+  <section id="latest-news" data-latest-news-anchor aria-label="GTA VI Release Countdown">
     <h2 class="countdown-heading">GTA VI <span>Release Countdown</span></h2>
     <p class="countdown-subtext">November 19, 2026 &nbsp;·&nbsp; 00:00 UTC</p>
     <div class="countdown-cards" id="countdown-cards" role="timer" aria-live="polite" aria-atomic="true">
