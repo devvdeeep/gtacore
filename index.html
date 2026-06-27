@@ -312,13 +312,13 @@
       --white: #0b0b0b;
     }
 
-    #home {
+    #hero {
       position: relative;
       width: 100%;
       height: 100vh;
     }
 
-    #home video {
+    #hero video {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -344,9 +344,9 @@
     /* ══════════════════════════════════════════════════════════
        COUNTDOWN SECTION
     ══════════════════════════════════════════════════════════ */
-    #latest-news {
+    #countdown-section {
       width: 100%;
-      min-height: 300px;
+      min-height: 50vh;
       background:
         radial-gradient(ellipse 80% 60% at 50% 100%, rgba(255,45,107,0.07) 0%, transparent 70%),
         radial-gradient(ellipse 60% 50% at 20% 0%,   rgba(0,229,255,0.05) 0%, transparent 60%),
@@ -360,7 +360,7 @@
       overflow: hidden;
     }
 
-    #latest-news::before {
+    #countdown-section::before {
       content: '';
       position: absolute;
       top: 0; left: 10%; right: 10%;
@@ -414,9 +414,9 @@
       transition: opacity 0.7s ease 0.3s, transform 0.7s ease 0.3s;
     }
 
-    #latest-news.visible .countdown-heading,
-    #latest-news.visible .countdown-subtext,
-    #latest-news.visible .countdown-cards {
+    #countdown-section.visible .countdown-heading,
+    #countdown-section.visible .countdown-subtext,
+    #countdown-section.visible .countdown-cards {
       opacity: 1;
       transform: translateY(0);
     }
@@ -800,8 +800,8 @@
        CHARACTERS SECTION
     ══════════════════════════════════════════════════════════ */
     .characters-section {
-      width: 100%;
       min-height: 400px;
+      width: 100%;
       background: #060608;
       padding: 100px 0 110px;
       position: relative;
@@ -1054,7 +1054,8 @@
     }
 
     @media (max-width: 768px) {
-      .characters-section { padding: 64px 0 72px; }
+      .characters-section {
+      min-height: 400px; padding: 64px 0 72px; }
       .characters-inner   { padding: 0 20px; }
       .characters-subtext { margin-bottom: 40px; }
       .characters-grid    { grid-template-columns: repeat(2, 1fr); gap: 18px; }
@@ -1074,8 +1075,8 @@
        SCREENSHOTS SECTION
     ══════════════════════════════════════════════════════════ */
     .screenshots-section {
-      width: 100%;
       min-height: 400px;
+      width: 100%;
       background: #060608;
       padding: 90px 0 100px;
       position: relative;
@@ -1297,7 +1298,8 @@
     }
 
     @media (max-width: 640px) {
-      .screenshots-section { padding: 60px 0 70px; }
+      .screenshots-section {
+      min-height: 400px; padding: 60px 0 70px; }
       .screenshots-inner { padding: 0 16px; }
       .screenshots-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
       .screenshot-img-wrap { padding-bottom: 72%; }
@@ -1403,8 +1405,8 @@
        LOCATIONS SECTION - PURE IMAGES
     ══════════════════════════════════════════════════════════ */
     .locations-section {
-      position: relative;
       min-height: 400px;
+      position: relative;
       padding: 100px 0 120px;
       border-top: 1px solid rgba(255,255,255,0.05);
       opacity: 0;
@@ -1761,7 +1763,8 @@
     }
 
     @media (max-width: 768px) {
-      .locations-section { padding: 80px 0 100px; }
+      .locations-section {
+      min-height: 400px; padding: 80px 0 100px; }
       .locations-inner { padding: 0 20px; }
       .locations-heading { margin-bottom: 40px; }
       .locations-grid { grid-template-columns: 1fr; gap: 20px; }
@@ -1998,8 +2001,8 @@
        LATEST UPDATES SECTION
     ══════════════════════════════════════════════════════════ */
     #latest-updates {
-      width: 100%;
       min-height: 400px;
+      width: 100%;
       background:
         radial-gradient(ellipse 80% 50% at 80% 0%, rgba(255,45,107,0.05) 0%, transparent 60%),
         radial-gradient(ellipse 60% 50% at 20% 100%, rgba(0,229,255,0.04) 0%, transparent 60%),
@@ -2497,7 +2500,8 @@
   <!-- ══════════════════════════════════════════════
        HERO
   ══════════════════════════════════════════════ -->
-  <section id="home" data-home-anchor>
+  <div id="home" style="position:absolute;top:0;left:0;width:0;height:0;pointer-events:none;" aria-hidden="true"></div>
+  <section id="hero" data-home-anchor>
     <video autoplay muted loop playsinline>
       <source src="hero.mp4" type="video/mp4" />
     </video>
@@ -2506,7 +2510,8 @@
   <!-- ══════════════════════════════════════════════
        COUNTDOWN SECTION
   ══════════════════════════════════════════════ -->
-  <section id="latest-news" data-latest-news-anchor aria-label="GTA VI Release Countdown">
+  <div id="latest-news" style="position:relative;top:calc(-1 * var(--nav-h));" aria-hidden="true"></div>
+  <section id="countdown-section" data-latest-news-anchor aria-label="GTA VI Release Countdown">
     <h2 class="countdown-heading">GTA VI <span>Release Countdown</span></h2>
     <p class="countdown-subtext">November 19, 2026 &nbsp;·&nbsp; 00:00 UTC</p>
     <div class="countdown-cards" id="countdown-cards" role="timer" aria-live="polite" aria-atomic="true">
@@ -2795,7 +2800,7 @@
     </div>
   </section>
 
-
+  <div id="preorder" style="position:relative;top:calc(-1 * var(--nav-h));" aria-hidden="true"></div>
   <!-- ══════════════════════════════════════════════
        LATEST UPDATES SECTION
   ══════════════════════════════════════════════ -->
@@ -2927,20 +2932,8 @@
       });
     });
 
-    // ── Smooth scroll for all nav anchor links ────────────────
-    document.querySelectorAll('.nav-links a[href^="#"], .mobile-links a[href^="#"], .nav-logo[href^="#"]').forEach(link => {
-      link.addEventListener('click', function(e) {
-        const href = this.getAttribute('href');
-        if (!href || href === '#') return;
-        const target = document.querySelector(href);
-        if (target) {
-          e.preventDefault();
-          const navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 80;
-          const targetTop = target.getBoundingClientRect().top + window.scrollY - navH;
-          window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
-        }
-      });
-    });
+    // Native browser anchor navigation handles scrolling automatically
+    // No custom scroll handler needed
 
     // Active links (click fallback for immediate feedback)
     document.querySelectorAll('.nav-links a, .mobile-links a').forEach(link => {
@@ -3043,7 +3036,7 @@
     setInterval(updateCountdown, 1000);
 
     // Intersection Observers
-    const cdSection = document.getElementById('latest-news');
+    const cdSection = document.getElementById('countdown-section');
     const cdObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
