@@ -346,7 +346,7 @@
     ══════════════════════════════════════════════════════════ */
     #latest-news {
       width: 100%;
-      min-height: 50vh;
+      min-height: 600px;
       background:
         radial-gradient(ellipse 80% 60% at 50% 100%, rgba(255,45,107,0.07) 0%, transparent 70%),
         radial-gradient(ellipse 60% 50% at 20% 0%,   rgba(0,229,255,0.05) 0%, transparent 60%),
@@ -801,6 +801,7 @@
     ══════════════════════════════════════════════════════════ */
     .characters-section {
       width: 100%;
+      min-height: 800px;
       background: #060608;
       padding: 100px 0 110px;
       position: relative;
@@ -1074,6 +1075,7 @@
     ══════════════════════════════════════════════════════════ */
     .screenshots-section {
       width: 100%;
+      min-height: 800px;
       background: #060608;
       padding: 90px 0 100px;
       position: relative;
@@ -1402,6 +1404,7 @@
     ══════════════════════════════════════════════════════════ */
     .locations-section {
       position: relative;
+      min-height: 800px;
       padding: 100px 0 120px;
       border-top: 1px solid rgba(255,255,255,0.05);
       opacity: 0;
@@ -1996,6 +1999,7 @@
     ══════════════════════════════════════════════════════════ */
     #latest-updates {
       width: 100%;
+      min-height: 800px;
       background:
         radial-gradient(ellipse 80% 50% at 80% 0%, rgba(255,45,107,0.05) 0%, transparent 60%),
         radial-gradient(ellipse 60% 50% at 20% 100%, rgba(0,229,255,0.04) 0%, transparent 60%),
@@ -2924,34 +2928,16 @@
     });
 
     // ── Smooth scroll for all nav anchor links ────────────────
-    const navLinks = document.querySelectorAll('.nav-links a[href^="#"], .mobile-links a[href^="#"], .nav-logo[href^="#"]');
-    console.log('Found nav links:', navLinks.length);
-    
-    navLinks.forEach(link => {
+    document.querySelectorAll('.nav-links a[href^="#"], .mobile-links a[href^="#"], .nav-logo[href^="#"]').forEach(link => {
       link.addEventListener('click', function(e) {
         const href = this.getAttribute('href');
-        console.log('--- Link clicked:', href);
-        
         if (!href || href === '#') return;
         const target = document.querySelector(href);
-        
         if (target) {
           e.preventDefault();
           const navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 80;
-          const rect = target.getBoundingClientRect();
-          const targetTop = rect.top + window.scrollY - navH;
-          
-          console.log('✓ Target found:', {
-            'Element': target.id,
-            'rect.top (from viewport)': rect.top,
-            'window.scrollY (current)': window.scrollY,
-            'navH': navH,
-            'SCROLL TO (calculated)': targetTop
-          });
-          
+          const targetTop = target.getBoundingClientRect().top + window.scrollY - navH;
           window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
-        } else {
-          console.log('✗ Target NOT found for:', href);
         }
       });
     });
