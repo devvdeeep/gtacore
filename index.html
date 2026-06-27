@@ -3740,6 +3740,388 @@
 
     // Auto-refresh stock every 60 seconds
     setInterval(loadStock, 60000);
+
+    // ── Footer Modal ─────────────────────────────────────────
+    const footerModalData = {
+      about: {
+        title: 'About GTA CORE',
+        content: `
+          <p>GTA CORE is an independent fan platform dedicated to bringing everything about Grand Theft Auto VI into one place. From the latest news and official announcements to character profiles, Leonida locations, screenshots, countdowns, and real-time stock tracking related to Rockstar's parent company, our goal is to keep fans informed with accurate and up-to-date information.</p>
+          <p>Whether you're following every GTA VI reveal, exploring the game's world, or monitoring the market's reaction to Rockstar-related news, GTA CORE is designed to be your central destination. We continuously update the site with verified information and new content as more details about the game are officially released.</p>
+          <p class="footer-modal-disclaimer">Disclaimer: GTA CORE is an independent fan-made website and is not affiliated with, endorsed by, or sponsored by Rockstar Games or Take-Two Interactive. Grand Theft Auto, GTA, Rockstar Games, and all related trademarks belong to their respective owners.</p>
+        `
+      },
+      standards: {
+        title: 'Our Standards',
+        content: `
+          <div class="footer-modal-standard"><div class="footer-modal-standard-title">Accuracy</div><p>We publish information based on official Rockstar Games announcements and trusted sources. Rumors and leaks are clearly distinguished from confirmed news.</p></div>
+          <div class="footer-modal-standard"><div class="footer-modal-standard-title">Timeliness</div><p>We strive to update GTA CORE as quickly as new information becomes available, ensuring visitors have access to the latest GTA VI developments.</p></div>
+          <div class="footer-modal-standard"><div class="footer-modal-standard-title">Transparency</div><p>Whenever information is speculative or unconfirmed, we make that clear. Our goal is to provide trustworthy content rather than misleading headlines.</p></div>
+          <div class="footer-modal-standard"><div class="footer-modal-standard-title">User Experience</div><p>GTA CORE is designed to be fast, responsive, and easy to navigate across desktop and mobile devices.</p></div>
+          <div class="footer-modal-standard"><div class="footer-modal-standard-title">Community First</div><p>Built by GTA fans for GTA fans, we aim to create a reliable hub where the community can stay informed and excited about Grand Theft Auto VI.</p></div>
+        `
+      },
+      contact: {
+        title: 'Contact Us',
+        content: `
+          <p>Have a question, suggestion, or want to get in touch with the GTA CORE team? We'd love to hear from you.</p>
+          <a class="footer-modal-email" href="mailto:rasaldnyandeep@gmail.com">rasaldnyandeep@gmail.com</a>
+        `
+      },
+      privacy: {
+        title: 'Privacy Policy',
+        content: `
+          <p>At GTA CORE, we respect your privacy. Our goal is to provide GTA VI news and information while collecting as little personal data as possible.</p>
+          <div class="footer-modal-section-title">Information We Collect</div>
+          <ul><li>Anonymous website analytics (such as page views and device type).</li><li>Cookies used to improve website performance and user experience.</li><li>Information you voluntarily provide, such as messages sent through our contact form.</li></ul>
+          <div class="footer-modal-section-title">How We Use Your Information</div>
+          <ul><li>Improve the website and user experience.</li><li>Monitor website performance and traffic.</li><li>Respond to user inquiries.</li></ul>
+          <div class="footer-modal-section-title">Third-Party Services</div>
+          <ul><li>Microsoft Clarity for anonymous analytics.</li><li>Google Analytics (if enabled) for traffic insights.</li><li>Google AdSense (if enabled) to display advertisements.</li></ul>
+          <div class="footer-modal-section-title">Data Security</div>
+          <p>We take reasonable measures to protect the information collected through our website. However, no method of online transmission or storage is completely secure.</p>
+          <div class="footer-modal-section-title">External Links</div>
+          <p>Our website may contain links to third-party websites. We are not responsible for the privacy practices or content of those websites.</p>
+          <div class="footer-modal-section-title">Policy Updates</div>
+          <p>This Privacy Policy may be updated from time to time. Changes will be posted on this page.</p>
+        `
+      },
+      terms: {
+        title: 'Terms of Use',
+        content: `
+          <p>Welcome to GTA CORE. By accessing and using this website, you agree to the following terms and conditions.</p>
+          <div class="footer-modal-section-title">Use of Content</div>
+          <p>All content on GTA CORE is provided for informational purposes only. You may browse, share, and reference our content, but you may not copy, reproduce, or republish it without permission.</p>
+          <div class="footer-modal-section-title">Accuracy of Information</div>
+          <p>We strive to provide accurate and up-to-date information about Grand Theft Auto VI. However, we cannot guarantee that all information is complete, accurate, or current at all times.</p>
+          <div class="footer-modal-section-title">Intellectual Property</div>
+          <p>GTA CORE is an independent fan-made website. Grand Theft Auto, GTA, Rockstar Games, Take-Two Interactive, logos, images, trademarks, and other related intellectual property belong to their respective owners.</p>
+          <div class="footer-modal-section-title">External Links</div>
+          <p>Our website may contain links to third-party websites. We are not responsible for the content, security, or privacy practices of those websites.</p>
+          <div class="footer-modal-section-title">Limitation of Liability</div>
+          <p>GTA CORE is provided "as is" without warranties of any kind. We are not liable for any loss or damages resulting from the use of this website or reliance on its content.</p>
+          <div class="footer-modal-section-title">Changes to These Terms</div>
+          <p>We reserve the right to update these Terms of Use at any time. Continued use of the website after changes are published constitutes acceptance of the revised terms.</p>
+        `
+      }
+    };
+
+    const footerModal = document.getElementById('footer-modal');
+    const footerModalTitle = document.getElementById('footer-modal-title');
+    const footerModalBody = document.getElementById('footer-modal-body');
+    const footerModalClose = document.getElementById('footer-modal-close');
+    const footerModalBackdrop = document.getElementById('footer-modal-backdrop');
+
+    function openFooterModal(key) {
+      const data = footerModalData[key];
+      if (!data) return;
+      footerModalTitle.textContent = data.title;
+      footerModalBody.innerHTML = data.content;
+      footerModal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeFooterModal() {
+      footerModal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    footerModalClose.addEventListener('click', closeFooterModal);
+    footerModalBackdrop.addEventListener('click', closeFooterModal);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeFooterModal(); });
+
+    document.querySelectorAll('[data-footer-modal]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        openFooterModal(btn.getAttribute('data-footer-modal'));
+      });
+    });
   </script>
+
+  <!-- ══════════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════════ -->
+  <style>
+    /* ── Footer ── */
+    #site-footer {
+      background: #080808;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding: 56px 32px 36px;
+      position: relative;
+    }
+
+    #site-footer::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 8%; right: 8%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,45,107,0.5), rgba(0,229,255,0.5), transparent);
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 40px;
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+    }
+
+    .footer-brand .footer-logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #00c853;
+      margin-bottom: 12px;
+    }
+
+    .footer-brand p {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      color: rgba(255,255,255,0.35);
+      max-width: 340px;
+      line-height: 1.7;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .footer-link-btn {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      color: rgba(255,255,255,0.55);
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: color 0.25s, border-color 0.25s, background 0.25s, box-shadow 0.25s;
+      text-decoration: none;
+    }
+
+    .footer-link-btn:hover {
+      color: #fff;
+      border-color: rgba(255,45,107,0.4);
+      background: rgba(255,45,107,0.07);
+      box-shadow: 0 0 16px rgba(255,45,107,0.15);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 24px;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      color: rgba(255,255,255,0.25);
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    /* ── Footer Modal ── */
+    #footer-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 3000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    #footer-modal.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    #footer-modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.82);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    #footer-modal-panel {
+      position: relative;
+      z-index: 1;
+      background: #111;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      width: min(680px, 100%);
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,45,107,0.1);
+      transform: translateY(20px);
+      transition: transform 0.25s ease;
+    }
+
+    #footer-modal.open #footer-modal-panel {
+      transform: translateY(0);
+    }
+
+    #footer-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 28px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      flex-shrink: 0;
+    }
+
+    #footer-modal-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, var(--pink), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    #footer-modal-close {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: rgba(255,255,255,0.5);
+      font-size: 18px;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s, background 0.2s;
+      flex-shrink: 0;
+    }
+
+    #footer-modal-close:hover { color: #fff; background: rgba(255,45,107,0.15); }
+
+    #footer-modal-body {
+      padding: 24px 28px 28px;
+      overflow-y: auto;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.8;
+    }
+
+    #footer-modal-body p { margin-bottom: 14px; }
+    #footer-modal-body ul { padding-left: 20px; margin-bottom: 14px; }
+    #footer-modal-body ul li { margin-bottom: 6px; }
+
+    .footer-modal-section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--pink);
+      margin: 20px 0 8px;
+    }
+
+    .footer-modal-standard {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+
+    .footer-modal-standard-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 6px;
+    }
+
+    .footer-modal-disclaimer {
+      background: rgba(255,45,107,0.06);
+      border: 1px solid rgba(255,45,107,0.15);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      margin-top: 16px;
+    }
+
+    .footer-modal-email {
+      display: inline-block;
+      margin-top: 16px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      background: linear-gradient(90deg, var(--pink), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
+    }
+
+    .footer-modal-email:hover { opacity: 0.8; }
+
+    @media (max-width: 600px) {
+      .footer-top { flex-direction: column; gap: 28px; }
+      .footer-links { gap: 6px; }
+      #footer-modal-body { padding: 20px; }
+    }
+  </style>
+
+  <footer id="site-footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo">GTA CORE</div>
+          <p>An independent fan platform dedicated to bringing everything Grand Theft Auto VI into one place. Not affiliated with Rockstar Games or Take-Two Interactive.</p>
+        </div>
+        <div class="footer-links">
+          <button class="footer-link-btn" data-footer-modal="about">About</button>
+          <button class="footer-link-btn" data-footer-modal="standards">Standards</button>
+          <button class="footer-link-btn" data-footer-modal="contact">Contact</button>
+          <button class="footer-link-btn" data-footer-modal="privacy">Privacy</button>
+          <button class="footer-link-btn" data-footer-modal="terms">Terms</button>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        © 2026 GTA CORE. All rights reserved. GTA CORE is in no way affiliated with Rockstar Games or Take-Two Interactive.<br>
+        'Grand Theft Auto' and the 'Grand Theft Auto' logos are trademarks of Take-Two Interactive.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Footer Modal -->
+  <div id="footer-modal" role="dialog" aria-modal="true" aria-labelledby="footer-modal-title">
+    <div id="footer-modal-backdrop"></div>
+    <div id="footer-modal-panel">
+      <div id="footer-modal-header">
+        <span id="footer-modal-title"></span>
+        <button id="footer-modal-close" aria-label="Close">✕</button>
+      </div>
+      <div id="footer-modal-body"></div>
+    </div>
+  </div>
+
 </body>
 </html>
