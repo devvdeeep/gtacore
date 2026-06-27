@@ -3176,33 +3176,7 @@
     updateActiveNavLink();
 
     // Theme toggle
-    const themeBtn = document.getElementById('theme-btn');
-    const iconMoon = document.getElementById('icon-moon');
-    const iconSun = document.getElementById('icon-sun');
     const html = document.documentElement;
-    themeBtn.addEventListener('click', () => {
-      const isDark = html.getAttribute('data-theme') === 'dark';
-      html.setAttribute('data-theme', isDark ? 'light' : 'dark');
-      iconMoon.style.display = isDark ? 'none' : '';
-      iconSun.style.display = isDark ? '' : 'none';
-    });
-
-    // Search
-    const searchBtn = document.getElementById('search-btn');
-    const searchOverlay = document.getElementById('search-overlay');
-    const searchClose = document.getElementById('search-close');
-    const searchInput = document.getElementById('search-input');
-    searchBtn.addEventListener('click', () => {
-      searchOverlay.classList.add('open');
-      setTimeout(() => searchInput.focus(), 50);
-    });
-    const closeSearch = () => searchOverlay.classList.remove('open');
-    searchClose.addEventListener('click', closeSearch);
-    searchOverlay.addEventListener('click', e => { if (e.target === searchOverlay) closeSearch(); });
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') closeSearch();
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); searchBtn.click(); }
-    });
 
     // Countdown
     const RELEASE_DATE = new Date("2026-11-19T00:00:00Z");
