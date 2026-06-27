@@ -244,6 +244,67 @@
       text-shadow: 0 0 10px rgba(255,45,107,0.5);
     }
 
+    #search-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 120px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    #search-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .search-box {
+      width: min(600px, 90vw);
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,45,107,0.4);
+      border-radius: 8px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      padding: 18px 56px 18px 20px;
+      outline: none;
+      box-shadow: 0 0 24px rgba(255,45,107,0.2);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .search-box input:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 32px rgba(0,229,255,0.2);
+    }
+
+    .search-box input::placeholder { color: rgba(255,255,255,0.3); }
+
+    #search-close {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 22px;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+    #search-close:hover { color: #fff; }
+
     [data-theme="light"] {
       --nav-bg: rgba(245,245,245,0.8);
       --nav-bg-scrolled: rgba(240,240,240,0.97);
@@ -2395,6 +2456,13 @@
       <li><a href="#preorder">Pre-Order</a></li>
     </ul>
     <div class="nav-controls">
+      <button class="nav-icon-btn" id="search-btn" aria-label="Search" title="Search">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <button class="nav-icon-btn" id="theme-btn" aria-label="Toggle theme" title="Toggle theme">
+        <svg id="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg id="icon-sun" viewBox="0 0 24 24" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
       <button id="hamburger" aria-label="Open menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -2414,6 +2482,13 @@
     </ul>
   </div>
 
+  <!-- Search overlay -->
+  <div id="search-overlay" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="Search GTA VI…" autocomplete="off" />
+      <button id="search-close" aria-label="Close search">✕</button>
+    </div>
+  </div>
 
   <!-- ══════════════════════════════════════════════
        HERO
@@ -2910,6 +2985,34 @@
     updateActiveNavLink();
 
     // Theme toggle
+    const themeBtn = document.getElementById('theme-btn');
+    const iconMoon = document.getElementById('icon-moon');
+    const iconSun = document.getElementById('icon-sun');
+    const html = document.documentElement;
+    themeBtn.addEventListener('click', () => {
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      iconMoon.style.display = isDark ? 'none' : '';
+      iconSun.style.display = isDark ? '' : 'none';
+    });
+
+    // Search
+    const searchBtn = document.getElementById('search-btn');
+    const searchOverlay = document.getElementById('search-overlay');
+    const searchClose = document.getElementById('search-close');
+    const searchInput = document.getElementById('search-input');
+    searchBtn.addEventListener('click', () => {
+      searchOverlay.classList.add('open');
+      setTimeout(() => searchInput.focus(), 50);
+    });
+    const closeSearch = () => searchOverlay.classList.remove('open');
+    searchClose.addEventListener('click', closeSearch);
+    searchOverlay.addEventListener('click', e => { if (e.target === searchOverlay) closeSearch(); });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeSearch();
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); searchBtn.click(); }
+    });
+
     // Countdown
     const RELEASE_DATE = new Date("2026-11-19T00:00:00Z");
     function pad(n) { return String(Math.max(0, n)).padStart(2, '0'); }
@@ -2936,7 +3039,7 @@
     setInterval(updateCountdown, 1000);
 
     // Intersection Observers
-    const cdSection = document.getElementById('countdown-section');
+    const cdSection = document.getElementById('latest-news');
     const cdObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
