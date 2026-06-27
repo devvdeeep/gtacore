@@ -3805,41 +3805,7 @@
         `
       }
     };
-
-    const footerModal = document.getElementById('footer-modal');
-    const footerModalTitle = document.getElementById('footer-modal-title');
-    const footerModalBody = document.getElementById('footer-modal-body');
-    const footerModalClose = document.getElementById('footer-modal-close');
-    const footerModalBackdrop = document.getElementById('footer-modal-backdrop');
-
-    function openFooterModal(key) {
-      const data = footerModalData[key];
-      if (!data) return;
-      footerModalTitle.textContent = data.title;
-      footerModalBody.innerHTML = data.content;
-      footerModal.classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeFooterModal() {
-      footerModal.classList.remove('open');
-      document.body.style.overflow = '';
-    }
-
-    footerModalClose.addEventListener('click', closeFooterModal);
-    footerModalBackdrop.addEventListener('click', closeFooterModal);
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeFooterModal(); });
-
-    document.querySelectorAll('[data-footer-modal]').forEach(btn => {
-      btn.addEventListener('click', e => {
-        e.preventDefault();
-        openFooterModal(btn.getAttribute('data-footer-modal'));
-      });
-    });
   </script>
-
-  <!-- ══════════════════════════════════════════════
-       FOOTER
   ══════════════════════════════════════════════ -->
   <style>
     /* ── Footer ── */
@@ -4122,6 +4088,39 @@
       <div id="footer-modal-body"></div>
     </div>
   </div>
+
+  <script>
+    const footerModal = document.getElementById('footer-modal');
+    const footerModalTitle = document.getElementById('footer-modal-title');
+    const footerModalBody = document.getElementById('footer-modal-body');
+    const footerModalClose = document.getElementById('footer-modal-close');
+    const footerModalBackdrop = document.getElementById('footer-modal-backdrop');
+
+    function openFooterModal(key) {
+      const data = footerModalData[key];
+      if (!data) return;
+      footerModalTitle.textContent = data.title;
+      footerModalBody.innerHTML = data.content;
+      footerModal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeFooterModal() {
+      footerModal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    footerModalClose.addEventListener('click', closeFooterModal);
+    footerModalBackdrop.addEventListener('click', closeFooterModal);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeFooterModal(); });
+
+    document.querySelectorAll('[data-footer-modal]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        openFooterModal(btn.getAttribute('data-footer-modal'));
+      });
+    });
+  </script>
 
 </body>
 </html>
