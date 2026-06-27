@@ -2924,16 +2924,26 @@
     });
 
     // ── Smooth scroll for all nav anchor links ────────────────
-    document.querySelectorAll('.nav-links a[href^="#"], .mobile-links a[href^="#"], .nav-logo[href^="#"]').forEach(link => {
+    const navLinks = document.querySelectorAll('.nav-links a[href^="#"], .mobile-links a[href^="#"], .nav-logo[href^="#"]');
+    console.log('Found nav links:', navLinks.length);
+    
+    navLinks.forEach(link => {
       link.addEventListener('click', function(e) {
         const href = this.getAttribute('href');
+        console.log('Link clicked:', href);
+        
         if (!href || href === '#') return;
         const target = document.querySelector(href);
+        console.log('Target element found:', target);
+        
         if (target) {
           e.preventDefault();
           const navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 80;
           const targetTop = target.getBoundingClientRect().top + window.scrollY - navH;
+          console.log('Scrolling to:', { navH, targetTop, currentScroll: window.scrollY });
           window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+        } else {
+          console.log('Target not found for:', href);
         }
       });
     });
