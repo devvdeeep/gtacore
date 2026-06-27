@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet" />
 
-  <style>
+  <style>a
     /* ── Tokens ──────────────────────────────────────────────── */
     :root {
       --pink:      #ff2d6b;
@@ -2559,36 +2559,7 @@
     .stock-neg { color: #ef4444; }
     .stock-flat { color: rgba(255,255,255,0.5); }
 
-    .stock-details-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
 
-    .stock-detail-item {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 10px;
-      padding: 12px 14px;
-    }
-
-    .stock-detail-label {
-      font-family: 'Inter', sans-serif;
-      font-size: 9px;
-      font-weight: 600;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.38);
-      margin-bottom: 5px;
-    }
-
-    .stock-detail-value {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 18px;
-      font-weight: 700;
-      color: rgba(255,255,255,0.85);
-      font-variant-numeric: tabular-nums;
-    }
 
     .stock-updated {
       margin-top: 18px;
@@ -2611,15 +2582,28 @@
 
     .stock-updated-dot.stale { background: rgba(255,255,255,0.3); animation: none; }
 
+    .stock-chart-wrap {
+      width: 100%;
+      height: 200px;
+      margin: 16px 0 8px;
+      position: relative;
+    }
+
+    .stock-chart-wrap canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
     @media (max-width: 480px) {
       .updates-inner { padding: 0 20px; }
       .updates-card-header { padding: 18px 18px 14px; }
       .updates-card-body { padding: 16px 18px 20px; }
       .news-thumb, .news-thumb-placeholder { flex: 0 0 58px; width: 58px; height: 44px; }
       .stock-price { font-size: 38px; }
-      .stock-details-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .stock-chart-wrap { height: 160px; }
     }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -3702,11 +3686,16 @@
       return 'stock-flat';
     }
 
-    function renderStock(q) {
+    let stockChartInstance = null;
+
+    function renderStockWithChart(q, candles) {
       const cls = colorClass(q.d);
       const arrow = parseFloat(q.d) > 0 ? '▲' : parseFloat(q.d) < 0 ? '▼' : '—';
       const now = new Date();
       const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' });
+      const isUp = parseFloat(q.d) >= 0;
+      const lineColor = isUp ? '#22c55e' : '#ef4444';
+      const gradientId = 'stockGrad_' + Date.now();
 
       document.getElementById('stock-content').innerHTML = `
         <div class="stock-main">
@@ -3719,28 +3708,84 @@
             <span class="stock-pct ${cls}">${fmtPct(q.dp)}</span>
           </div>
         </div>
-        <div class="stock-details-grid">
-          <div class="stock-detail-item">
-            <div class="stock-detail-label">Open</div>
-            <div class="stock-detail-value">${fmtPrice(q.o)}</div>
-          </div>
-          <div class="stock-detail-item">
-            <div class="stock-detail-label">Prev Close</div>
-            <div class="stock-detail-value">${fmtPrice(q.pc)}</div>
-          </div>
-          <div class="stock-detail-item">
-            <div class="stock-detail-label">Day High</div>
-            <div class="stock-detail-value">${fmtPrice(q.h)}</div>
-          </div>
-          <div class="stock-detail-item">
-            <div class="stock-detail-label">Day Low</div>
-            <div class="stock-detail-value">${fmtPrice(q.l)}</div>
-          </div>
+        <div class="stock-chart-wrap">
+          <canvas id="stockChart"></canvas>
         </div>
         <div class="stock-updated">
           <span class="stock-updated-dot"></span>
-          Updated ${timeStr}
+          Updated ${timeStr} · 1D Chart
         </div>`;
+
+      const ctx = document.getElementById('stockChart').getContext('2d');
+      if (stockChartInstance) { stockChartInstance.destroy(); stockChartInstance = null; }
+
+      const grad = ctx.createLinearGradient(0, 0, 0, 200);
+      grad.addColorStop(0, isUp ? 'rgba(34,197,94,0.35)' : 'rgba(239,68,68,0.35)');
+      grad.addColorStop(1, 'rgba(0,0,0,0)');
+
+      const labels = candles.t.map(ts => {
+        const d = new Date(ts * 1000);
+        return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+      });
+
+      stockChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            data: candles.c,
+            borderColor: lineColor,
+            borderWidth: 2,
+            backgroundColor: grad,
+            fill: true,
+            tension: 0.3,
+            pointRadius: 0,
+            pointHoverRadius: 4,
+            pointHoverBackgroundColor: lineColor,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(10,10,10,0.9)',
+              titleColor: 'rgba(255,255,255,0.5)',
+              bodyColor: '#fff',
+              bodyFont: { family: 'Barlow Condensed', size: 16, weight: '700' },
+              titleFont: { family: 'Inter', size: 10 },
+              padding: 10,
+              callbacks: {
+                label: ctx => ' $' + ctx.parsed.y.toFixed(2)
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(255,255,255,0.04)' },
+              ticks: {
+                color: 'rgba(255,255,255,0.3)',
+                font: { family: 'Inter', size: 9 },
+                maxTicksLimit: 6,
+                maxRotation: 0
+              },
+              border: { color: 'rgba(255,255,255,0.06)' }
+            },
+            y: {
+              position: 'right',
+              grid: { color: 'rgba(255,255,255,0.04)' },
+              ticks: {
+                color: 'rgba(255,255,255,0.3)',
+                font: { family: 'Barlow Condensed', size: 11 },
+                callback: v => '$' + v.toFixed(0)
+              },
+              border: { color: 'rgba(255,255,255,0.06)' }
+            }
+          }
+        }
+      });
     }
 
     function renderStockError(msg, isDemo) {
@@ -3754,35 +3799,40 @@
 
     async function loadStock() {
       document.getElementById('stock-content').innerHTML = `<div class="updates-loading" id="stock-loading"><div class="updates-spinner"></div><span>Fetching market data…</span></div>`;
-      if (FINNHUB_API_KEY === 'YOUR_FINNHUB_API_KEY') {
-        // Demo mode: show realistic placeholder data
-        renderStock({
-          o: 183.40,
-          h: 186.75,
-          l: 181.20,
-          c: 185.62,
-          pc: 182.91,
-          d: 2.71,
-          dp: 1.4814
-        });
-        const body = document.querySelector('#stock-card .updates-card-body');
-        const note = document.createElement('p');
-        note.style.cssText = 'font-family:Inter,sans-serif;font-size:10px;color:rgba(255,255,255,0.28);margin-top:10px;text-align:center;';
-        note.textContent = '⚠ Demo mode – add a Finnhub API key for live prices';
-        body.appendChild(note);
-        return;
-      }
       try {
-        const res = await fetch(FINNHUB_URL);
-        if (!res.ok) {
-          if (res.status === 401 || res.status === 403) throw new Error('Invalid API key. Get a free key at <a href="https://finnhub.io" target="_blank" rel="noopener">finnhub.io</a>');
-          if (res.status === 429) throw new Error('Rate limit reached. Please try again in a moment.');
-          throw new Error(`Server returned ${res.status}`);
+        // Fetch quote + intraday candles (1-min resolution for today)
+        const now = Math.floor(Date.now() / 1000);
+        const startOfDay = now - (now % 86400); // midnight UTC
+        const [quoteRes, candleRes] = await Promise.all([
+          fetch(`https://finnhub.io/api/v1/quote?symbol=TTWO&token=${FINNHUB_API_KEY}`),
+          fetch(`https://finnhub.io/api/v1/stock/candle?symbol=TTWO&resolution=5&from=${startOfDay}&to=${now}&token=${FINNHUB_API_KEY}`)
+        ]);
+
+        if (!quoteRes.ok) {
+          if (quoteRes.status === 401 || quoteRes.status === 403) throw new Error('Invalid API key. Get a free key at <a href="https://finnhub.io" target="_blank" rel="noopener">finnhub.io</a>');
+          throw new Error(`Server returned ${quoteRes.status}`);
         }
-        const data = await res.json();
-        if (data.error) throw new Error('API key issue: ' + data.error);
-        if (typeof data.c !== 'number' || data.c === 0) throw new Error('No quote data returned for TTWO.');
-        renderStock(data);
+
+        const q = await quoteRes.json();
+        if (q.error) throw new Error('API key issue: ' + q.error);
+        if (typeof q.c !== 'number' || q.c === 0) throw new Error('No quote data returned for TTWO.');
+
+        let candles = null;
+        if (candleRes.ok) {
+          const cd = await candleRes.json();
+          if (cd.s === 'ok' && cd.t && cd.t.length > 1) candles = cd;
+        }
+
+        // Fallback: build a synthetic flat line from open to current if no candle data
+        if (!candles) {
+          const pts = 20;
+          candles = {
+            t: Array.from({ length: pts }, (_, i) => startOfDay + i * (3600 * 6.5 / pts)),
+            c: Array.from({ length: pts }, (_, i) => q.o + (q.c - q.o) * (i / (pts - 1)))
+          };
+        }
+
+        renderStockWithChart(q, candles);
       } catch (err) {
         renderStockError(err.message || 'Network error. Please check your connection.', false);
       }
